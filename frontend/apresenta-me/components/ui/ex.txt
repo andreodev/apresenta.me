@@ -1,0 +1,5 @@
+por components visual global por exemplo: 
+  um botão que pode ser reutilizado
+  cards
+  etc
+  recomendo dar uma olhada no https://ui.shadcn.com/
