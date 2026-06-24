@@ -1,26 +1,47 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"log"
 	"net/http"
-	"os"
+
+	"api/internal/config"
+	"api/internal/database"
+	"api/internal/routes"
+	"api/internal/users"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	port := os.Getenv("PORT")
+	_ = godotenv.Load()
 
-	if port == "" {
-		port = "8080"
+	cfg := config.LoadConfig()
+
+	db, err := database.ConnectToDatabase(cfg.DatabaseURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	if err := db.Ping(context.Background()); err != nil {
+		log.Fatal(err)
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("API Online com hot reload 🚀"))
+	userRepository := users.NewUserRepository(db)
+	userService := users.NewService(userRepository)
+	userHandler := users.NewHandler(userService)
+
+	r := chi.NewRouter()
+
+	routes.Register(r, routes.Handlers{
+		UserHandler: userHandler,
 	})
 
-	fmt.Println("Servidor rodando na porta " + port)
+	log.Printf("Servidor iniciado na porta %s", cfg.Port)
 
-	err := http.ListenAndServe(":"+port, nil)
-	if err != nil {
-		panic(err)
+	if err := http.ListenAndServe(":"+cfg.Port, r); err != nil {
+		log.Fatal(err)
 	}
 }

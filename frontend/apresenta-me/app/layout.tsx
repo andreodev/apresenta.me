@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Fustat } from "next/font/google";
+import { Fustat, Inter } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 const fustat = Fustat({
   subsets: ["latin"],
@@ -20,7 +23,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${fustat.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", fustat.variable, "font-sans", inter.variable)}
     >
      <body className="font-sans min-h-full flex flex-col">
         {children}
