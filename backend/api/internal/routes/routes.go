@@ -3,6 +3,7 @@ package routes
 import (
 	"api/internal/auth"
 	"api/internal/curriculums"
+	"api/internal/experiences"
 	"api/internal/users"
 	"net/http"
 
@@ -12,6 +13,7 @@ import (
 type Handlers struct {
 	UserHandler       *users.Handler
 	CurriculumHandler *curriculums.Handler
+	ExperienceHandler *experiences.Handler
 }
 
 func Register(r chi.Router, handlers Handlers) {
@@ -38,6 +40,11 @@ func Register(r chi.Router, handlers Handlers) {
 		r.Route("/curriculums", func(r chi.Router) {
 			r.Post("/", handlers.CurriculumHandler.Create)
 			r.Get("/user/{userID}", handlers.CurriculumHandler.ListByUserID)
+		})
+
+		r.Route("/experiences", func(r chi.Router) {
+			r.Post("/", handlers.ExperienceHandler.Create)
+			r.Get("/curriculum/{curriculumID}", handlers.ExperienceHandler.ListByCurriculumID)
 		})
 	})
 }
