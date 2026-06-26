@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"api/internal/config"
+	"api/internal/curriculums"
 	"api/internal/database"
 	"api/internal/routes"
 	"api/internal/users"
@@ -33,10 +34,15 @@ func main() {
 	userService := users.NewService(userRepository)
 	userHandler := users.NewHandler(userService)
 
+	curriculumRepository := curriculums.NewRepository(db)
+	curriculumService := curriculums.NewService(curriculumRepository)
+	curriculumHandler := curriculums.NewHandler(curriculumService)
+
 	r := chi.NewRouter()
 
 	routes.Register(r, routes.Handlers{
-		UserHandler: userHandler,
+		UserHandler:       userHandler,
+		CurriculumHandler: curriculumHandler,
 	})
 
 	log.Printf("Servidor iniciado na porta %s", cfg.Port)

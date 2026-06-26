@@ -2,6 +2,7 @@ package routes
 
 import (
 	"api/internal/auth"
+	"api/internal/curriculums"
 	"api/internal/users"
 	"net/http"
 
@@ -9,7 +10,8 @@ import (
 )
 
 type Handlers struct {
-	UserHandler *users.Handler
+	UserHandler       *users.Handler
+	CurriculumHandler *curriculums.Handler
 }
 
 func Register(r chi.Router, handlers Handlers) {
@@ -31,6 +33,11 @@ func Register(r chi.Router, handlers Handlers) {
 
 		r.Get("/me", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("rota privada funcionando"))
+		})
+
+		r.Route("/curriculums", func(r chi.Router) {
+			r.Post("/", handlers.CurriculumHandler.Create)
+			r.Get("/user/{userID}", handlers.CurriculumHandler.ListByUserID)
 		})
 	})
 }
