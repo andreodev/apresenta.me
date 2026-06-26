@@ -1,6 +1,7 @@
 package users
 
 import (
+	"api/internal/auth"
 	"encoding/json"
 	"net/http"
 )
@@ -40,36 +41,28 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func (h *Handler) Login(
-	w http.ResponseWriter,
-	r *http.Request,
-) {
+func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	var input LoginInput
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		http.Error(
-			w,
-			"json inválido",
-			http.StatusBadRequest,
-		)
+		http.Error(w, "json inválido", http.StatusBadRequest)
 		return
 	}
 
-	user, err := h.service.Login(
-		r.Context(),
-		input,
-	)
-
+	user, err := h.service.Login(r.Context(), input)
 	if err != nil {
-		http.Error(
-			w,
-			err.Error(),
-			http.StatusUnauthorized,
-		)
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	accessToken, err := auth.GenerateJWT(user.ID, user.Email)
+	if err != nil {
+		http.Error(w, "erro ao gerar token", http.StatusInternalServerError)
 		return
 	}
 
 	response := map[string]any{
+		"accessToken": accessToken,
 		"user": map[string]any{
 			"id":    user.ID,
 			"name":  user.Name,
@@ -77,10 +70,6 @@ func (h *Handler) Login(
 		},
 	}
 
-	w.Header().Set(
-		"Content-Type",
-		"application/json",
-	)
-
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }

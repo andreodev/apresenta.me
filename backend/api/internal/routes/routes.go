@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"api/internal/auth"
 	"api/internal/users"
 	"net/http"
 
@@ -23,5 +24,13 @@ func Register(r chi.Router, handlers Handlers) {
 	r.Route("/auth/users", func(r chi.Router) {
 		r.Post("/register", handlers.UserHandler.Create)
 		r.Post("/login", handlers.UserHandler.Login)
+	})
+
+	r.Group(func(r chi.Router) {
+		r.Use(auth.AuthMiddleware)
+
+		r.Get("/me", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("rota privada funcionando"))
+		})
 	})
 }
