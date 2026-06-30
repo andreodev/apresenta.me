@@ -38,12 +38,14 @@ func Register(r chi.Router, handlers Handlers) {
 		})
 
 		r.Route("/curriculums", func(r chi.Router) {
-			r.Post("/", handlers.CurriculumHandler.Create)
-			r.Get("/user/{userID}", handlers.CurriculumHandler.ListByUserID)
+			r.Post("/create", handlers.CurriculumHandler.Create)
+			r.Get("/me", handlers.CurriculumHandler.ListMine)
+			r.Get("/{id}", handlers.CurriculumHandler.GetCurriculumById)
+			r.Delete("/{id}", handlers.CurriculumHandler.Delete)
 		})
 
 		r.Route("/experiences", func(r chi.Router) {
-			r.Post("/", handlers.ExperienceHandler.Create)
+			r.Post("/create", handlers.ExperienceHandler.Create)
 			r.Get("/curriculum/{curriculumID}", handlers.ExperienceHandler.ListByCurriculumID)
 		})
 	})

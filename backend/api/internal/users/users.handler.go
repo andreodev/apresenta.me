@@ -30,10 +30,10 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := map[string]any{
-		"id":        user.ID,
-		"name":      user.Name,
-		"email":     user.Email,
-		"createdAt": user.CreatedAt,
+		"user_id":    user.ID,
+		"name":       user.Name,
+		"email":      user.Email,
+		"created_at": user.CreatedAt,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -64,9 +64,9 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	response := map[string]any{
 		"accessToken": accessToken,
 		"user": map[string]any{
-			"id":    user.ID,
-			"name":  user.Name,
-			"email": user.Email,
+			"user_id": user.ID,
+			"name":    user.Name,
+			"email":   user.Email,
 		},
 	}
 

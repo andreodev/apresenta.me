@@ -17,12 +17,12 @@ func NewService(repository *Repository) *Service {
 }
 
 func (s *Service) Create(ctx context.Context, input CreateCurriculumInput) (*Curriculum, error) {
-	input.UserID = (input.UserID)
+	input.User_id = (input.User_id)
 	input.Slug = strings.ToLower(strings.TrimSpace(input.Slug))
 	input.FullName = strings.TrimSpace(input.FullName)
 
-	if input.UserID == uuid.Nil {
-		return nil, errors.New("userId é obrigatório")
+	if input.User_id == uuid.Nil {
+		return nil, errors.New("User_id é obrigatório")
 	}
 
 	if input.Slug == "" {
@@ -34,7 +34,7 @@ func (s *Service) Create(ctx context.Context, input CreateCurriculumInput) (*Cur
 	}
 
 	curriculum := &Curriculum{
-		UserID:       input.UserID,
+		User_id:      input.User_id,
 		Slug:         input.Slug,
 		FullName:     input.FullName,
 		Headline:     strings.TrimSpace(input.Headline),
@@ -55,12 +55,37 @@ func (s *Service) Create(ctx context.Context, input CreateCurriculumInput) (*Cur
 	return curriculum, nil
 }
 
-func (s *Service) ListByUserID(ctx context.Context, userID string) ([]Curriculum, error) {
-	userID = strings.TrimSpace(userID)
-
-	if userID == "" {
-		return nil, errors.New("userId é obrigatório")
+func (s *Service) ListByUser_id(ctx context.Context, User_id uuid.UUID) ([]Curriculum, error) {
+	if User_id == uuid.Nil {
+		return nil, errors.New("User_id é obrigatório")
 	}
 
-	return s.repository.ListByUserID(ctx, userID)
+	return s.repository.ListByUser_id(ctx, User_id)
+}
+
+func (s *Service) Get(ctx context.Context, user_id string) (*Curriculum, error) {
+	user_id = strings.TrimSpace(user_id)
+
+	if user_id == "" {
+		return nil, errors.New("user_id is required")
+	}
+
+	return s.repository.Get(ctx, user_id)
+}
+
+func (s *Service) GetCurriculumById(ctx context.Context, id uuid.UUID) (*Curriculum, error) {
+	if id == uuid.Nil {
+		return nil, errors.New("id is required")
+	}
+
+	return s.repository.GetCurriculumById(ctx, id)
+}
+
+func (s *Service) Delete(ctx context.Context, id uuid.UUID) error {
+
+	if id == uuid.Nil {
+		return errors.New("id is required")
+	}
+
+	return s.repository.Delete(ctx, id)
 }

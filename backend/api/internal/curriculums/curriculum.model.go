@@ -8,7 +8,7 @@ import (
 
 type Curriculum struct {
 	ID           uuid.UUID `json:"id"`
-	UserID       uuid.UUID `json:"user_id"`
+	User_id      uuid.UUID `json:"user_id"`
 	Slug         string    `json:"slug"`
 	FullName     string    `json:"full_name"`
 	Headline     string    `json:"headline"`
@@ -26,7 +26,7 @@ type Curriculum struct {
 }
 
 type CreateCurriculumInput struct {
-	UserID       uuid.UUID `json:"user_id"`
+	User_id      uuid.UUID `json:"user_id"`
 	Slug         string    `json:"slug"`
 	FullName     string    `json:"full_name"`
 	Headline     string    `json:"headline"`

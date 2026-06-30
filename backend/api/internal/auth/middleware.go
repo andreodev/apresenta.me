@@ -13,9 +13,13 @@ const UserContextKey ContextKey = "user"
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		authHeader := r.Header.Get("Authorization")
 
-		log.Println("Authorization:", authHeader)
+		if r.Method == http.MethodOptions {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		authHeader := r.Header.Get("Authorization")
 
 		if authHeader == "" {
 			http.Error(w, "token não informado", http.StatusUnauthorized)

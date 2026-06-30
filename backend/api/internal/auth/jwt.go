@@ -10,17 +10,17 @@ import (
 )
 
 type Claims struct {
-	UserID uuid.UUID `json:"userId"`
-	Email  string    `json:"email"`
+	User_id uuid.UUID `json:"User_id"`
+	Email   string    `json:"email"`
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(userID uuid.UUID, email string) (string, error) {
+func GenerateJWT(User_id uuid.UUID, email string) (string, error) {
 	secret := []byte(os.Getenv("JWT_SECRET"))
 
 	claims := Claims{
-		UserID: userID,
-		Email:  email,
+		User_id: User_id,
+		Email:   email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -56,8 +56,8 @@ func ValidateJWT(tokenString string) (*Claims, error) {
 		return nil, errors.New("token inválido")
 	}
 
-	if claims.UserID == uuid.Nil {
-		return nil, errors.New("token sem userId")
+	if claims.User_id == uuid.Nil {
+		return nil, errors.New("token sem User_id")
 	}
 
 	return claims, nil

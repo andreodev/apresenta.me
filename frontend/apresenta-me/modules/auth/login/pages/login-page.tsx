@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -56,13 +57,14 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/");
+    toast.success("Login realizado com sucesso");
+    router.push("/dashboard");
     router.refresh();
   }
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md rounded-lg">
         <CardHeader>
           <CardTitle>Entrar na conta</CardTitle>
           <CardDescription>
@@ -71,7 +73,7 @@ export default function LoginPage() {
 
           <CardAction>
             <Link
-              href="/register"
+              href="/auth/register"
               className="text-sm font-medium text-primary hover:underline"
             >
               Criar conta
@@ -126,7 +128,7 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Ainda não tem conta?{" "}
-            <Link href="/register" className="font-medium text-primary">
+            <Link href="/auth/register" className="font-medium text-primary">
               Cadastre-se
             </Link>
           </p>
